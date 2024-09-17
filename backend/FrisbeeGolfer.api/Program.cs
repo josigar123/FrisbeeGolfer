@@ -1,7 +1,12 @@
+using MongoDB.Driver;
+using MongoDB.Bson;
+
 var builder = WebApplication.CreateBuilder(args);
 
+InitializeMongoDbClient(builder);
+
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -15,30 +20,28 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+app.MapControllers();
 
 app.Run();
+return;
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+void InitializeMongoDbClient(WebApplicationBuilder builder)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    var connectionUri = builder.Configuration.GetSection("MongoDb")["ConnectionUri"];
+    var databaseName = builder.Configuration.GetSection("MongoDb")["DatabaseName"];
+    var settings = MongoClientSettings.FromConnectionString(connectionUri);
+
+    var mongoClient = new MongoClient(settings);
+    
+    try {
+        var result = mongoClient.GetDatabase(databaseName).RunCommand<BsonDocument>(new BsonDocument("ping", 1));
+        Console.WriteLine("Pinged your deployment. You successfully connected to MongoDB!");
+        builder.Services.AddSingleton(mongoClient);
+
+    } catch (Exception ex) {
+        Console.WriteLine(ex);
+    }
 }
