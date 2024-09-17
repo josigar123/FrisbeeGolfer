@@ -398,5 +398,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 # dev file
-FrisbeeGolfer/FrisbeeGolfer.api/appsettings.Development.json
 FrisbeeGolfer.api/appsettings.Development.json
+backend/FrisbeeGolfer.api/appsettings.Development.json
+frontend/init.sh
