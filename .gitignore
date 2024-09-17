@@ -399,3 +399,4 @@ FodyWeavers.xsd
 
 # dev file
 FrisbeeGolfer/FrisbeeGolfer.api/appsettings.Development.json
+FrisbeeGolfer.api/appsettings.Development.json
