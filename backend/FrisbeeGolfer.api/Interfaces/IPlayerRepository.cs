@@ -1,5 +1,4 @@
 using FrisbeeGolfer.api.Dtos;
-using FrisbeeGolfer.api.Models;
 
 namespace FrisbeeGolfer.api.Interfaces;
 
