@@ -1,3 +1,5 @@
+using FrisbeeGolfer.api.Interfaces;
+using FrisbeeGolfer.api.Repositories;
 using MongoDB.Driver;
 using MongoDB.Bson;
 
@@ -6,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 InitializeMongoDbClient(builder);
 
 // Add services to the container.
+
+builder.Services.AddTransient<IPlayerRepository, PlayerRepository>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
